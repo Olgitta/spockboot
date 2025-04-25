@@ -29,7 +29,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(antMatcher(HttpMethod.POST, "/api/auth/**")).permitAll()
+                        .requestMatchers(
+                                antMatcher(HttpMethod.POST, "/api/auth/**"),
+                                antMatcher(HttpMethod.POST, "/api/register")).permitAll()
                         .anyRequest().authenticated()
                 )
                 // Best practice for JWT Because:

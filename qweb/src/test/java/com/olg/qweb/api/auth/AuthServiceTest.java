@@ -2,7 +2,6 @@ package com.olg.qweb.api.auth;
 
 import com.olg.core.auth.JwtService;
 import com.olg.qweb.api.auth.dto.AuthRequest;
-import com.olg.qweb.api.auth.dto.AuthResponse;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,16 +21,16 @@ public class AuthServiceTest {
         AuthRequest request = new AuthRequest(email, "123");
 
         // Mock the behavior of jwtService
-        when(mockJwtService.generateToken(username, email, uid)).thenReturn(expectedToken);
+        when(mockJwtService.generateAccessToken(username, email, uid)).thenReturn(expectedToken);
 
         // Act
-        AuthResponse response = authService.login(request);
+        AuthService.AuthTokens response = authService.login(request.email(), request.password());
 
         // Assert
         assertNotNull(response);
-        assertEquals(expectedToken, response.token());
+        assertEquals(expectedToken, response.accessToken());
 
         // Verify that jwtService.generateToken() was called once with the correct username
-        verify(mockJwtService).generateToken(username, email, uid);
+        verify(mockJwtService).generateAccessToken(username, email, uid);
     }
 }

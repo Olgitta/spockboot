@@ -1,27 +1,42 @@
 package com.olg.core.auth;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.olg.core.auth.dto.UserClaims;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Encoders;
+import io.jsonwebtoken.security.Keys;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import javax.crypto.SecretKey;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class JwtServiceTest {
 
-    private final JwtService jwtService = new JwtService(3600000, "app name");
+    private static JwtService jwtService;
 
-    @Test
-    void generateToken_shouldContainUsername() {
-        String token = jwtService.generateToken("alice", "mail", "8687687686");
-        String username = jwtService.extractUsername(token);
-
-        assertEquals("alice", username);
+    @BeforeAll
+    static void setup(){
+        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        String secret = Encoders.BASE64.encode(key.getEncoded());
+        jwtService = new JwtService(600000,
+                86400000,
+                secret,
+                "app name");
     }
 
     @Test
-    void extractUsername_shouldThrow_onInvalidToken() {
+    void generateToken_shouldContainClaims() {
+        String token = jwtService.generateAccessToken("alice", "mail", "8687687686");
+        UserClaims claims = jwtService.extractUserClaims(token);
+
+        assertEquals("alice", claims.username());
+    }
+
+    @Test
+    void validateToken_shouldReturnFalse_onInvalidToken() {
         String invalidToken = "invalid.token.value";
 
-        assertThrows(Exception.class, () -> jwtService.extractUsername(invalidToken));
+        assertFalse(jwtService.validateToken(invalidToken));
     }
 }

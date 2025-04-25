@@ -38,7 +38,7 @@ public class LoggingFilter implements Filter {
             chain.doFilter(request, response);
 
         } finally {
-            MDC.clear(); // Clean up to avoid memory leaks
+            MDC.clear();
         }
     }
 }
