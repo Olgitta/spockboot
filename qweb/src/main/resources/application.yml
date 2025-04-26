@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: QWeb
+  profiles:
+    active: ${PROFILE:local}
+
+jwt:
+  access_token:
+    expiration: 600000
+  refresh_token:
+    expiration: 86400000
+  secret: sMDFD8HXPKGjA5LwGck2iM0U8K0naKt1VEdLtMGkUz4=
+  issuer: QWeb
+
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+  file:
+    path: logs

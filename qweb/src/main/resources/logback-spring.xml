@@ -4,7 +4,7 @@
     <springProperty scope="context" name="LOG_PATH" source="logging.file.path" defaultValue="logs"/>
 
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{requestId}] [%X{uid}] [%X{email}] %logger{36} - %msg%n"/>
-
+    <property name="LEVEL" value="${LOG_LEVEL:INFO}"/>
     <!-- Console Appender -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -24,17 +24,18 @@
         </encoder>
     </appender>
 
-    <!-- Development Profile spring.profiles.active=dev -->
-    <springProfile name="dev">
-        <logger name="com.olg" level="DEBUG"/>
-        <root level="INFO">
+    <!-- Development Profile spring.profiles.active=local -->
+    <springProfile name="local">
+        <logger name="com.olg" level="${LEVEL}"/>
+        <root level="${LEVEL}">
             <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
         </root>
     </springProfile>
 
     <!-- Production Profile spring.profiles.active=prod -->
     <springProfile name="prod">
-        <logger name="com.olg" level="WARN"/>
+        <logger name="com.olg" level="INFO"/>
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
