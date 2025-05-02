@@ -2,13 +2,18 @@ package com.olg.qweb.api.auth;
 
 import com.olg.core.auth.JwtService;
 import com.olg.qweb.api.auth.dto.AuthRequest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class AuthServiceTest {
 
     @Test
+    @DisplayName("Login Should Return Auth Response With Token")
     void login_shouldReturnAuthResponseWithToken() {
         // Arrange
         JwtService mockJwtService = mock(JwtService.class);

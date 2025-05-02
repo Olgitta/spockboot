@@ -1,0 +1,39 @@
+package com.olg.qweb.api.users;
+
+import com.olg.core.annotations.ApiVersion;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Component
+public class UserServiceFactory {
+
+    private final Map<String, IUserService> versions = new HashMap<>();
+//    private final IUserService defaultService;
+
+    public UserServiceFactory(List<IUserService> services) {
+        for (IUserService service : services) {
+            ApiVersion versionAnnotation = service.getClass().getAnnotation(ApiVersion.class);
+            if (versionAnnotation != null) {
+                versions.put(versionAnnotation.value(), service);
+            }
+        }
+
+//        this.defaultService = versions.getOrDefault("1", services.get(0));
+    }
+
+    public IUserService getService(String version) throws Exception {
+        if(version == null || versions.get(version) == null) {
+            throw new Exception("Not supported service version");
+        }
+
+        return versions.get(version);
+    }
+
+//    public IUserService getService() {
+//        return defaultService;
+//    }
+}
+

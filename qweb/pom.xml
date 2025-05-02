@@ -82,11 +82,19 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.2.5</version>
                 <configuration>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
+                    <useModulePath>false</useModulePath>
+                    <reportFormat>brief</reportFormat>
+                    <trimStackTrace>false</trimStackTrace>
+                    <properties>
+                        <configurationParameters>
+                            junit.jupiter.displayname.generator.default = org.junit.jupiter.api.DisplayNameGenerator$ReplaceUnderscores
+                        </configurationParameters>
+                    </properties>
                 </configuration>
             </plugin>
         </plugins>

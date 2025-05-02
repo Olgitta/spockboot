@@ -14,7 +14,7 @@
 
     <!-- Rolling File Appender -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/application.log</file>
+<!--        <file>${LOG_PATH}/application.log</file>-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/application.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
@@ -24,19 +24,33 @@
         </encoder>
     </appender>
 
-    <!-- Development Profile spring.profiles.active=local -->
     <springProfile name="local">
-        <logger name="com.olg" level="${LEVEL}"/>
+        <logger name="com.olg" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </logger>
+
+        <logger name="org" level="ERROR" />
+        <logger name="com" level="ERROR" />
+        <logger name="net" level="ERROR" />
+
         <root level="${LEVEL}">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
         </root>
     </springProfile>
 
-    <!-- Production Profile spring.profiles.active=prod -->
     <springProfile name="prod">
-        <logger name="com.olg" level="INFO"/>
-        <root level="INFO">
+        <logger name="com.olg" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </logger>
+
+        <logger name="org" level="ERROR"/>
+        <logger name="com" level="ERROR"/>
+        <logger name="net" level="ERROR"/>
+
+        <root level="WARN">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
         </root>
