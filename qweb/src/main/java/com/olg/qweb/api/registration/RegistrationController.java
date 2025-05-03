@@ -20,8 +20,18 @@ public class RegistrationController {
 
     @PostMapping("/register")
     public ResponseEntity<RegistrationResponse> register(@RequestBody RegistrationRequest request) {
-        RegistrationService.RegistrationResult result = registrationService.register(request.username(), request.email(), request.password());
-        return ResponseEntity.ok(new RegistrationResponse(result.email()));
+
+        try {
+            RegistrationService.RegistrationResult result = registrationService.register(request.username(), request.email(), request.password());
+            return ResponseEntity.ok(
+                    new RegistrationResponse(
+                            result.email(),
+                            result.username(),
+                            result.uid()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(null);
+        }
+
     }
 
 }

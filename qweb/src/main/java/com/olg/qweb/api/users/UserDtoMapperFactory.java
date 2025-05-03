@@ -13,9 +13,7 @@ public class UserDtoMapperFactory {
     private final Map<String, IUserDtoMapper> versions = new HashMap<>();
 
     public UserDtoMapperFactory(List<IUserDtoMapper> mappers){
-        System.out.println("================UserDtoMapperFactory ctor");
         for (IUserDtoMapper mapper : mappers) {
-            System.out.println("===============UserDtoMapperFactory forloop");
 
             ApiVersion versionAnnotation = mapper.getClass().getAnnotation(ApiVersion.class);
             if (versionAnnotation != null) {

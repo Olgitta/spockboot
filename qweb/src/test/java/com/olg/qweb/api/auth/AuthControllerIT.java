@@ -1,6 +1,7 @@
 package com.olg.qweb.api.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.javafaker.Faker;
 import com.olg.qweb.api.auth.dto.AuthRequest;
 import com.olg.qweb.api.registration.dto.RegistrationRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,13 +28,16 @@ class AuthControllerIT {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final String email = "test@example.com";
+    Faker faker = new Faker();
+
+    private final String username = faker.name().username();
+    private final String email = username + "@mail.com";
     private final String password = "password123";
 
     @BeforeEach
     void setup() throws Exception {
         // Register user before each test if needed
-        RegistrationRequest request = new RegistrationRequest("testuser", email, password);
+        RegistrationRequest request = new RegistrationRequest(username, email, password);
         mockMvc.perform(post("/api/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))

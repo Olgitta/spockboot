@@ -17,6 +17,7 @@
     <modules>
         <module>core</module>
         <module>qweb</module>
+        <module>mysql</module>
     </modules>
 
     <properties>

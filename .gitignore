@@ -37,4 +37,5 @@ build/
 ### Mac OS ###
 .DS_Store
 /.idea/
-/qweb/logs/
+logs/
+/docker/mysql_data/
