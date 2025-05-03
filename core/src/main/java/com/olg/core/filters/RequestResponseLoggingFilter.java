@@ -21,6 +21,14 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        String uri = request.getRequestURI();
+
+        // Skip logging for /h2-console and its subpaths
+        if (uri.startsWith("/h2-console")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         long startTime = System.currentTimeMillis();
 //        String requestId = MDC.get("requestId");
 
@@ -40,7 +48,6 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
                     request.getRequestURI(),
                     status,
                     duration);
-
 
             wrappedResponse.copyBodyToResponse(); // copy content back to real response
         }

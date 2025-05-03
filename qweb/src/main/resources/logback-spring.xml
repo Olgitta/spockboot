@@ -3,8 +3,8 @@
 
     <springProperty scope="context" name="LOG_PATH" source="logging.file.path" defaultValue="logs"/>
 
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{requestId}] [%X{uid}] [%X{email}] %logger{36} - %msg%n"/>
-    <property name="LEVEL" value="${LOG_LEVEL:INFO}"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [ver=%X{apiVersion}] [requestId=%X{requestId}] [uid=%X{uid}] [email=%X{email}] %logger{36} - %msg%n"/>
+    <property name="LEVEL" value="${LOG_LEVEL:info}"/>
     <!-- Console Appender -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -25,14 +25,14 @@
     </appender>
 
     <springProfile name="local">
-        <logger name="com.olg" level="DEBUG" additivity="false">
+        <logger name="com.olg" level="debug" additivity="false">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
         </logger>
 
-        <logger name="org" level="ERROR" />
-        <logger name="com" level="ERROR" />
-        <logger name="net" level="ERROR" />
+        <logger name="org" level="error" />
+        <logger name="com" level="error" />
+        <logger name="net" level="error" />
 
         <root level="${LEVEL}">
             <appender-ref ref="CONSOLE"/>
@@ -41,14 +41,14 @@
     </springProfile>
 
     <springProfile name="prod">
-        <logger name="com.olg" level="INFO" additivity="false">
+        <logger name="com.olg" level="info" additivity="false">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
         </logger>
 
-        <logger name="org" level="ERROR"/>
-        <logger name="com" level="ERROR"/>
-        <logger name="net" level="ERROR"/>
+        <logger name="org" level="error" />
+        <logger name="com" level="error" />
+        <logger name="net" level="error" />
 
         <root level="WARN">
             <appender-ref ref="CONSOLE"/>

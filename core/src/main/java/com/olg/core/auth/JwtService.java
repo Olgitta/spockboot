@@ -15,6 +15,9 @@ import java.util.Date;
 @Service
 public class JwtService {
 
+    public record TokenPair(String accessToken, String refreshToken) {
+    }
+
     private static final Logger log = LoggerFactory.getLogger(JwtService.class);
     private final Key key;// = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private final Long accessExpiration;
@@ -48,6 +51,12 @@ public class JwtService {
 
     public String generateRefreshToken(String username, String email, String uid) {
         return generateToken(username, email, uid, refreshExpiration);
+    }
+
+    public TokenPair generateAccessAndRefreshToken(String username, String email, String uid) {
+
+        return new TokenPair(generateToken(username, email, uid, accessExpiration),
+                generateToken(username, email, uid, refreshExpiration));
     }
 
     private String generateToken(String username, String email, String uid, Long expiration) {

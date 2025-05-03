@@ -26,6 +26,11 @@ public class LoggingFilter implements Filter {
             String requestId = UUID.randomUUID().toString();
             MDC.put("requestId", requestId);
 
+            String apiVersion = httpRequest.getHeader("API-Version");
+            if (apiVersion != null) {
+                MDC.put("apiVersion", apiVersion);
+            }
+
             Authentication auth = SecurityUtils.getAuthentication();
 
             if (auth != null && auth.isAuthenticated()) {

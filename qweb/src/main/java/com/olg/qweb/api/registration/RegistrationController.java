@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/api")
 public class RegistrationController {
@@ -22,12 +24,10 @@ public class RegistrationController {
     public ResponseEntity<RegistrationResponse> register(@RequestBody RegistrationRequest request) {
 
         try {
-            RegistrationService.RegistrationResult result = registrationService.register(request.username(), request.email(), request.password());
-            return ResponseEntity.ok(
-                    new RegistrationResponse(
-                            result.email(),
-                            result.username(),
-                            result.uid()));
+            RegistrationResponse rs = registrationService.register(request.username(), request.email(), request.password());
+            return ResponseEntity
+                    .created(URI.create("/users/" + rs.guid()))
+                    .body(rs);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(null);
         }

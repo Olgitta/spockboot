@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.olg.qweb.api.auth.dto.AuthRequest;
 import com.olg.qweb.api.registration.dto.RegistrationRequest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestInstance(TestInstance.Lifecycle.PER_CLASS) // Allows @BeforeAll to be non-static
 class AuthControllerIT {
 
     @Autowired
@@ -34,14 +37,14 @@ class AuthControllerIT {
     private final String email = username + "@mail.com";
     private final String password = "password123";
 
-    @BeforeEach
+    @BeforeAll
     void setup() throws Exception {
         // Register user before each test if needed
         RegistrationRequest request = new RegistrationRequest(username, email, password);
         mockMvc.perform(post("/api/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -53,7 +56,7 @@ class AuthControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").exists())
+                .andExpect(jsonPath("$.accessToken").exists())
                 .andReturn();
 
         // Extract Set-Cookie header with refresh token
@@ -65,7 +68,7 @@ class AuthControllerIT {
         MvcResult refreshResult = mockMvc.perform(post("/api/auth/refresh")
                         .cookie(loginResult.getResponse().getCookies()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").exists())
+                .andExpect(jsonPath("$.accessToken").exists())
                 .andReturn();
     }
 }

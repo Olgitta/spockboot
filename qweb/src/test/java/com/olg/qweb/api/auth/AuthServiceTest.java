@@ -5,6 +5,7 @@ import com.olg.core.auth.JwtService;
 import com.olg.core.utils.PasswordEncoder;
 import com.olg.mysql.users.User;
 import com.olg.mysql.users.UserRepository;
+import com.olg.qweb.api.auth.dto.AuthResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +27,8 @@ public class AuthServiceTest {
         UserRepository userRepository = mock(UserRepository.class);
         PasswordEncoder passwordEncoder = new PasswordEncoder();
 
-        String expectedToken = "mocked-token";
+        String expectedAccessToken = "mocked-expectedAccessToken";
+        String expectedRefreshToken = "mocked-expectedRefreshToken";
         String password = "1234567";
         User user = new User();
         user.setName("alice");
@@ -38,14 +40,19 @@ public class AuthServiceTest {
                 userRepository,
                 passwordEncoder);
 
-        when(mockJwtService.generateAccessToken(user.getName(), user.getEmail(), user.getGuid().toString())).thenReturn(expectedToken);
+        when(mockJwtService.generateAccessAndRefreshToken(
+                user.getName(),
+                user.getEmail(),
+                user.getGuid().toString()))
+                .thenReturn(new JwtService.TokenPair(expectedAccessToken, expectedRefreshToken));
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         // Act
-        AuthService.AuthTokens response = authService.login(user.getEmail(), password);
+        AuthResponse response = authService.login(user.getEmail(), password);
 
         // Assert
         assertNotNull(response);
-        assertEquals(expectedToken, response.accessToken());
+        assertEquals(expectedAccessToken, response.accessToken());
+        assertEquals(expectedRefreshToken, response.refreshToken());
     }
 }

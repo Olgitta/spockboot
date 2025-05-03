@@ -4,6 +4,7 @@ import com.olg.core.auth.JwtService;
 import com.olg.core.utils.PasswordEncoder;
 import com.olg.mysql.users.User;
 import com.olg.mysql.users.UserRepository;
+import com.olg.qweb.api.auth.dto.AuthResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,34 +26,29 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public record AuthTokens (String accessToken, String refereshToken) {}
-
-    public AuthTokens login(String email, String password) throws Exception {
+    public AuthResponse login(String email, String password) throws Exception {
 
         log.info("User login {}", email);
+
         // TODO: validate input
+        User user = userRepository.findByEmail(email).orElseThrow();
 
-        User found = userRepository.findByEmail(email)
-                .filter(user -> passwordEncoder.matches(password, user.getPasswordHash()))
-                .orElse(null);
-
-        if(found == null){
+        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             // todo: create custom exception
             throw new Exception("User not found");
         }
-        String token = jwtService.generateAccessToken(found.getName(), found.getEmail(), found.getGuid().toString());
-        String refreshToken = jwtService.generateRefreshToken(found.getName(), found.getEmail(), found.getGuid().toString());
-        return new AuthTokens(token, refreshToken);
-
+        //todo: validate
+        JwtService.TokenPair tokens = jwtService.generateAccessAndRefreshToken(user.getName(), user.getEmail(), user.getGuid().toString());
+        return new AuthResponse(tokens.accessToken(), tokens.refreshToken());
     }
 
-    public AuthTokens refresh(String refreshToken) throws Exception {
+    public AuthResponse refresh(String refreshToken) throws Exception {
         String token = jwtService.generateAccessToken(refreshToken);
-        if(token==null) {
+        if (token == null) {
             //todo: create custom exception
             throw new Exception("Login required");
         }
-        return new AuthTokens(token, null);
+        return new AuthResponse(token, refreshToken);
     }
 }
 
