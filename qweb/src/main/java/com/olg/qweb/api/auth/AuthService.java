@@ -38,7 +38,11 @@ public class AuthService {
             throw new Exception("User not found");
         }
         //todo: validate
-        JwtService.TokenPair tokens = jwtService.generateAccessAndRefreshToken(user.getName(), user.getEmail(), user.getGuid().toString());
+        JwtService.TokenPair tokens = jwtService.generateAccessAndRefreshToken(
+                user.getName(),
+                user.getEmail(),
+                user.getGuid().toString(),
+                user.getId());
         return new AuthResponse(tokens.accessToken(), tokens.refreshToken());
     }
 

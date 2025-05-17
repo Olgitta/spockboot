@@ -22,6 +22,7 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String uri = request.getRequestURI();
+        String method = request.getMethod();
 
         // Skip logging for /h2-console and its subpaths
         if (uri.startsWith("/h2-console")) {
@@ -32,7 +33,7 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
         long startTime = System.currentTimeMillis();
 //        String requestId = MDC.get("requestId");
 
-        log.info("Request {} {}", request.getMethod(), request.getRequestURI());
+        log.info("Request {} {}", method, uri);
 
         // Wrap the response to capture status after filter chain
         ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
@@ -44,8 +45,8 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
             long duration = System.currentTimeMillis() - startTime;
 
             log.info("Response {} {} {} {}ms",
-                    request.getMethod(),
-                    request.getRequestURI(),
+                    method,
+                    uri,
                     status,
                     duration);
 

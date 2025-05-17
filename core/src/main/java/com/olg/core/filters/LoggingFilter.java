@@ -35,7 +35,7 @@ public class LoggingFilter implements Filter {
 
             if (auth != null && auth.isAuthenticated()) {
                 UserClaims userClaims = (UserClaims) auth.getPrincipal();
-                MDC.put("uid", userClaims.uid());
+                MDC.put("uid", userClaims.guid());
                 MDC.put("username", userClaims.username());
                 MDC.put("email", userClaims.email());
             }

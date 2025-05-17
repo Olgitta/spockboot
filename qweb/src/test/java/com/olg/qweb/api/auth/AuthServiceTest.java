@@ -43,7 +43,8 @@ public class AuthServiceTest {
         when(mockJwtService.generateAccessAndRefreshToken(
                 user.getName(),
                 user.getEmail(),
-                user.getGuid().toString()))
+                user.getGuid().toString(),
+                user.getId()))
                 .thenReturn(new JwtService.TokenPair(expectedAccessToken, expectedRefreshToken));
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 

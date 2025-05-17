@@ -3,13 +3,14 @@ package com.olg.qweb.api.users.v2;
 import com.olg.core.annotations.ApiVersion;
 import com.olg.mysql.users.User;
 import com.olg.mysql.users.UserRepository;
+import com.olg.qweb.api.users.IUserResponse;
 import com.olg.qweb.api.users.IUserService;
 import com.olg.qweb.api.users.v2.dto.UserMapper;
-import com.olg.qweb.api.users.v2.dto.UserResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @ApiVersion("2")
@@ -26,7 +27,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserResponse getUserById(String id) {
+    public IUserResponse getUserById(String id) {
         log.debug("getUserById - {} - ApiVersion - {}", id, version);
 
         User user = userRepository.findByGuid(UUID.fromString(id)).orElseThrow();
@@ -37,5 +38,15 @@ public class UserService implements IUserService {
     @Override
     public String getVersion() {
         return this.version;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public List<IUserResponse> getUsers() {
+        List<User> users = userRepository.findAll();
+
+        return UserMapper.map(users);
     }
 }

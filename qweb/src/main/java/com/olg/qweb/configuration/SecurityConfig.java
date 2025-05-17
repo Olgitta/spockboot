@@ -36,6 +36,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 antMatcher(HttpMethod.POST, "/api/auth/**"),
                                 antMatcher(HttpMethod.POST, "/api/register")).permitAll()
+//                        .requestMatchers(antMatcher(HttpMethod.GET, "/api/users")).authenticated()
+//                        .requestMatchers(antMatcher(HttpMethod.GET, "/api/users")).hasAnyRole("ADMIN", "USER") // or just "USER"
+//                        .requestMatchers(antMatcher(HttpMethod.GET, "/api/users/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 // Best practice for JWT Because:

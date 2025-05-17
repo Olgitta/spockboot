@@ -3,7 +3,6 @@ package com.olg.qweb.api.users.v1;
 import com.olg.core.utils.PasswordEncoder;
 import com.olg.mysql.users.User;
 import com.olg.mysql.users.UserRepository;
-import com.olg.qweb.api.users.IUserResponse;
 import com.olg.qweb.api.users.IUserService;
 import com.olg.qweb.api.users.v1.dto.UserResponse;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

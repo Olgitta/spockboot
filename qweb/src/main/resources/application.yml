@@ -27,5 +27,8 @@ jwt:
 logging:
   level:
     root: ${LOG_LEVEL:info}
+    org:
+      springframework:
+        security: DEBUG
   file:
     path: logs

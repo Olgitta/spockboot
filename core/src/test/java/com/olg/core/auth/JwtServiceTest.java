@@ -27,10 +27,11 @@ class JwtServiceTest {
 
     @Test
     void generateToken_shouldContainClaims() {
-        String token = jwtService.generateAccessToken("alice", "mail", "8687687686");
+        String token = jwtService.generateAccessToken("alice", "mail", "8687687686", 100L);
         UserClaims claims = jwtService.extractUserClaims(token);
 
         assertEquals("alice", claims.username());
+        assertEquals(100L, claims.id());
     }
 
     @Test

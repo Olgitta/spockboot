@@ -11,7 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @ApiVersion("1")
 @Service("UserServiceV1")
@@ -27,7 +29,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserResponse getUserById(String id) {
+    public IUserResponse getUserById(String id) {
         log.debug("getUserById - {} - ApiVersion - {}", id, version);
 
         User user = userRepository.findByGuid(UUID.fromString(id)).orElseThrow();
@@ -38,5 +40,12 @@ public class UserService implements IUserService {
     @Override
     public String getVersion() {
         return this.version;
+    }
+
+    @Override
+    public List<IUserResponse> getUsers() {
+        List<User> users = userRepository.findAll();
+
+        return UserMapper.map(users);
     }
 }

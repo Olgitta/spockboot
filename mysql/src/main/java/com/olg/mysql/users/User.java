@@ -1,19 +1,13 @@
 package com.olg.mysql.users;
 
+import com.olg.mysql.BaseEntity;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity {
 
     @Column(nullable = false, unique = true, updatable = false)
     private UUID guid = UUID.randomUUID();
@@ -26,21 +20,6 @@ public class User {
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime created;
-
-    @UpdateTimestamp
-    private LocalDateTime updated;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public UUID getGuid() {
         return guid;
@@ -74,23 +53,16 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
-    public LocalDateTime getUpdated() {
-        return updated;
-    }
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", guid=" + guid +
+                "guid=" + guid +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", created=" + created +
-                ", updated=" + updated +
+                ", id=" + id +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }
