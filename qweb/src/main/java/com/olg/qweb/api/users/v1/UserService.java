@@ -6,14 +6,12 @@ import com.olg.mysql.users.UserRepository;
 import com.olg.qweb.api.users.IUserResponse;
 import com.olg.qweb.api.users.IUserService;
 import com.olg.qweb.api.users.v1.dto.UserMapper;
-import com.olg.qweb.api.users.v1.dto.UserResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @ApiVersion("1")
 @Service("UserServiceV1")

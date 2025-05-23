@@ -54,9 +54,14 @@
         </dependency>
         <dependency>
             <groupId>com.olg</groupId>
-            <artifactId>mysql</artifactId>
+            <artifactId>mysql-infra</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.olg</groupId>
+            <artifactId>domain-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
 <!--        com....-->

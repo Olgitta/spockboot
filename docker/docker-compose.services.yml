@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  qweb:
+    image: qweb
+    ports:
+      - "8080:8080"     # HTTP
+      - "5005:5005"
+    networks:
+      - spock_net
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      LOG_LEVEL: debug
+      PROFILE: docker
+    command: >
+      java
+      -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      -Dspring.profiles.active=docker
+      -jar app.jar
+    volumes:
+      - ./containers_data/qweb:/app/logs
+
+networks:
+  spock_net:
+    external: true
+    name: spock_net

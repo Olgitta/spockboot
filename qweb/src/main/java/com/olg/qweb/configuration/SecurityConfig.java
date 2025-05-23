@@ -18,27 +18,24 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 public class SecurityConfig {
 
     private final JwtService jwtService;
+    private final AppConfig appConfig;
 
-    public SecurityConfig(JwtService jwtService) {
+    public SecurityConfig(JwtService jwtService, AppConfig appConfig) {
+
         this.jwtService = jwtService;
+        this.appConfig = appConfig;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(cors -> {})
                 .headers(headers -> headers
                         .frameOptions(frameOptions -> frameOptions.sameOrigin()) // Allow from same origin (localhost)
                 )
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers(
-                                antMatcher(HttpMethod.POST, "/api/auth/**"),
-                                antMatcher(HttpMethod.POST, "/api/register")).permitAll()
-//                        .requestMatchers(antMatcher(HttpMethod.GET, "/api/users")).authenticated()
-//                        .requestMatchers(antMatcher(HttpMethod.GET, "/api/users")).hasAnyRole("ADMIN", "USER") // or just "USER"
-//                        .requestMatchers(antMatcher(HttpMethod.GET, "/api/users/**")).authenticated()
+                        .requestMatchers(appConfig.getPublicPaths().toArray(new String[0])).permitAll()
                         .anyRequest().authenticated()
                 )
                 // Best practice for JWT Because:

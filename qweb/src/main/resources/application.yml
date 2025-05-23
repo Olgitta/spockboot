@@ -16,6 +16,9 @@ spring:
       hibernate:
         format_sql: true
 
+server:
+  port: 8080
+
 jwt:
   access_token:
     expiration: 600000
@@ -32,3 +35,20 @@ logging:
         security: DEBUG
   file:
     path: logs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
+
+app:
+  public-paths:
+    - /api/auth/**
+    - /api/register
+    - /api/events
+    - /api/venues
+

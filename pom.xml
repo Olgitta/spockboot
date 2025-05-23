@@ -17,7 +17,11 @@
     <modules>
         <module>core</module>
         <module>qweb</module>
-        <module>mysql</module>
+        <module>mysql-infra</module>
+        <module>redis-infra</module>
+        <module>seat-reservation-service</module>
+        <module>domain-core</module>
+        <module>kafka-infra</module>
     </modules>
 
     <properties>

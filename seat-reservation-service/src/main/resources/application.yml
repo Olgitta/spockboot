@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: Seats
+  profiles:
+    active: ${PROFILE:local}
+  datasource:
+    url: jdbc:mysql://localhost:3306/spockboot?useSSL=false&serverTimezone=UTC
+    username: root
+    hikari:
+      connection-timeout: 5000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8081
+
+jwt:
+  access_token:
+    expiration: 600000
+  refresh_token:
+    expiration: 86400000
+  secret: sMDFD8HXPKGjA5LwGck2iM0U8K0naKt1VEdLtMGkUz4=
+  issuer: Seats
+
+logging:
+  level:
+    root: ${LOG_LEVEL:info}
+    org:
+      springframework:
+        security: DEBUG
+  file:
+    path: logs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
+
+app:
+  public-paths:
+    - /seats/**
+

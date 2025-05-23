@@ -22,3 +22,13 @@ spring:
 #    console:
 #      enabled: true
 #      path: /h2-console
+
+
+app:
+  public-paths:
+    - /api/auth/**
+    - /api/register
+    - /api/events
+    - /api/venues
+    - /actuator/**
+    - /h2-console/**

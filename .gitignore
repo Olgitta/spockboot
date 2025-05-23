@@ -39,3 +39,4 @@ build/
 /.idea/
 logs/
 /docker/mysql_data/
+/docker/.idea/
