@@ -24,24 +24,10 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
-        <!-- Embedded Kafka for tests -->
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <!-- Jackson for JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-        </dependency>
-
-        <!-- Spring Test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-test</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

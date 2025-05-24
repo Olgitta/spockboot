@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -16,6 +17,12 @@ import java.util.Date;
  * Service for generating, validating, and parsing JWT (JSON Web Token) tokens.
  */
 @Service
+@ConditionalOnProperty(name = {
+        "jwt.access_token.expiration",
+        "jwt.refresh_token.expiration",
+        "jwt.secret",
+        "jwt.issuer"
+})
 public class JwtService {
 
     /**

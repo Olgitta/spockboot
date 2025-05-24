@@ -60,6 +60,11 @@
             <artifactId>redis-infra</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.olg</groupId>
+            <artifactId>kafka-infra</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <!--        test-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

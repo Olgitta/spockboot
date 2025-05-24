@@ -297,10 +297,203 @@ class KafkaInfraIntegrationTest {
 
 ---
 
-Would you like:
+To **auto-register Kafka producers/consumers for any DTO** and use a **reusable `BaseKafkaMessage<T>` structure**, we can follow a clean, extensible architecture that lets your `kafka-infra` library support many event types.
 
-* The Gradle version of the setup?
-* To mock Kafka for unit tests instead?
-* To test your custom producer/consumer beans?
+---
 
-Let me know how deep you'd like to go.
+## ✅ Step 1: Define a Reusable Base Message Wrapper
+
+```java
+package com.example.kafka.model;
+
+public class BaseKafkaMessage<T> {
+    private String eventType;
+    private T payload;
+
+    public BaseKafkaMessage() {}
+
+    public BaseKafkaMessage(String eventType, T payload) {
+        this.eventType = eventType;
+        this.payload = payload;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
+    public T getPayload() {
+        return payload;
+    }
+
+    public void setPayload(T payload) {
+        this.payload = payload;
+    }
+}
+```
+
+This allows you to send different event types with a consistent envelope.
+
+---
+
+## ✅ Step 2: Kafka Producer – Generic and JSON-Aware
+
+```java
+package com.example.kafka.producer;
+
+import com.example.kafka.model.BaseKafkaMessage;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+@Service
+public class GenericKafkaProducer {
+
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
+    public GenericKafkaProducer(KafkaTemplate<String, Object> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
+    public <T> void send(String topic, BaseKafkaMessage<T> message) {
+        kafkaTemplate.send(topic, message);
+    }
+}
+```
+
+---
+
+## ✅ Step 3: Kafka Configuration – Generic Producer & Consumer
+
+### Producer Config
+
+```java
+@Bean
+public ProducerFactory<String, Object> genericProducerFactory() {
+    return new DefaultKafkaProducerFactory<>(Map.of(
+        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092",
+        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
+        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class
+    ));
+}
+
+@Bean
+public KafkaTemplate<String, Object> kafkaTemplate() {
+    return new KafkaTemplate<>(genericProducerFactory());
+}
+```
+
+### Consumer Config (for BaseKafkaMessage)
+
+```java
+@Bean
+public ConsumerFactory<String, BaseKafkaMessage<Object>> baseMessageConsumerFactory() {
+    JsonDeserializer<BaseKafkaMessage<Object>> deserializer = new JsonDeserializer<>(BaseKafkaMessage.class);
+    deserializer.addTrustedPackages("*"); // or specify package
+
+    return new DefaultKafkaConsumerFactory<>(
+        Map.of(
+            ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092",
+            ConsumerConfig.GROUP_ID_CONFIG, "generic-consumer",
+            ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest",
+            ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
+            ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class
+        ),
+        new StringDeserializer(),
+        deserializer
+    );
+}
+
+@Bean(name = "baseMessageListenerFactory")
+public ConcurrentKafkaListenerContainerFactory<String, BaseKafkaMessage<Object>> baseMessageListenerFactory() {
+    var factory = new ConcurrentKafkaListenerContainerFactory<String, BaseKafkaMessage<Object>>();
+    factory.setConsumerFactory(baseMessageConsumerFactory());
+    return factory;
+}
+```
+
+---
+
+## ✅ Step 4: Generic Kafka Consumer
+
+```java
+@Service
+public class GenericKafkaConsumer {
+
+    @KafkaListener(topics = "my-topic", groupId = "generic-consumer", containerFactory = "baseMessageListenerFactory")
+    public void listen(BaseKafkaMessage<Object> message) {
+        System.out.println("Received: " + message.getEventType());
+
+        switch (message.getEventType()) {
+            case "booking":
+                BookingPayload booking = convert(message.getPayload(), BookingPayload.class);
+                System.out.println("Booking payload: " + booking.getId());
+                break;
+            case "payment":
+                PaymentPayload payment = convert(message.getPayload(), PaymentPayload.class);
+                System.out.println("Payment payload: " + payment.getAmount());
+                break;
+            default:
+                System.out.println("Unknown event: " + message.getEventType());
+        }
+    }
+
+    private <T> T convert(Object obj, Class<T> targetClass) {
+        return new ObjectMapper().convertValue(obj, targetClass);
+    }
+}
+```
+
+---
+
+## ✅ Step 5: Example DTOs
+
+```java
+public class BookingPayload {
+    private String id;
+    private String userId;
+    // Getters/setters
+}
+
+public class PaymentPayload {
+    private String transactionId;
+    private double amount;
+    // Getters/setters
+}
+```
+
+---
+
+## 🔁 Usage Example
+
+### Sending a message:
+
+```java
+BaseKafkaMessage<BookingPayload> msg = new BaseKafkaMessage<>(
+    "booking",
+    new BookingPayload("b123", "user999")
+);
+producer.send("my-topic", msg);
+```
+
+---
+
+## ✅ Benefits
+
+* 🧩 Reusable wrapper for all messages
+* 🔄 Easily extendable for new DTOs
+* 🧪 Suitable for both microservices and library modules
+* 🔐 Type-safe deserialization with polymorphic support if needed
+
+---
+
+Would you like me to:
+
+* Add **integration test** using `@EmbeddedKafka`?
+* Add **schema registry support** (if using Confluent)?
+* Extend to **Spring Cloud Stream** abstraction?
+
+Let me know your direction.
+
