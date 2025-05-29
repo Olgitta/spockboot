@@ -22,20 +22,11 @@ spring:
 server:
   port: 8081
 
-#jwt:
-#  access_token:
-#    expiration: 600000
-#  refresh_token:
-#    expiration: 86400000
-#  secret: sMDFD8HXPKGjA5LwGck2iM0U8K0naKt1VEdLtMGkUz4=
-#  issuer: Seats
-
 logging:
   level:
     root: ${LOG_LEVEL:info}
     org:
-      springframework:
-        security: DEBUG
+      springframework: INFO
   file:
     path: logs
 
@@ -52,4 +43,5 @@ app:
   public-paths:
     - /seats/**
   kafka-topic: seat_reservation
+  seat-lock-ttl-seconds: 300
 

@@ -40,3 +40,4 @@ build/
 logs/
 /docker/mysql_data/
 /docker/.idea/
+/docker/containers_data/

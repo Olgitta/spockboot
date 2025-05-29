@@ -65,6 +65,10 @@
             <artifactId>kafka-infra</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
         <!--        test-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -74,13 +78,11 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.12.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -102,11 +104,6 @@
                     <useModulePath>false</useModulePath>
                     <reportFormat>brief</reportFormat>
                     <trimStackTrace>false</trimStackTrace>
-                    <properties>
-                        <configurationParameters>
-                            junit.jupiter.displayname.generator.default = org.junit.jupiter.api.DisplayNameGenerator$ReplaceUnderscores
-                        </configurationParameters>
-                    </properties>
                 </configuration>
             </plugin>
         </plugins>

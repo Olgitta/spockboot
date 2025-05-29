@@ -1,11 +1,13 @@
 package com.olg.services.seats.api.dto;
 
+import com.olg.domain.enums.SeatStatus;
+
+import java.util.Objects;
+
 public class SeatResponse {
-//    private Long eventId;
-//    private Long venueId;
     private String rowNumber;
     private String seatNumber;
-    private byte statusId;
+    private SeatStatus statusId;
 
     public String getRowNumber() {
         return rowNumber;
@@ -23,11 +25,26 @@ public class SeatResponse {
         this.seatNumber = seatNumber;
     }
 
-    public byte getStatusId() {
+    public SeatStatus getStatusId() {
         return statusId;
     }
 
-    public void setStatusId(byte statusId) {
+    public void setStatusId(SeatStatus statusId) {
         this.statusId = statusId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SeatResponse that = (SeatResponse) o;
+        return Objects.equals(rowNumber, that.rowNumber) &&
+                Objects.equals(seatNumber, that.seatNumber) &&
+                statusId == that.statusId; // Для enum можно сравнивать напрямую
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRowNumber(), getSeatNumber(), getStatusId());
     }
 }

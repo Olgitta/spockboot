@@ -11,7 +11,6 @@ import java.util.Map;
 public class UserServiceFactory {
 
     private final Map<String, IUserService> versions = new HashMap<>();
-//    private final IUserService defaultService;
 
     public UserServiceFactory(List<IUserService> services) {
         for (IUserService service : services) {
@@ -20,8 +19,6 @@ public class UserServiceFactory {
                 versions.put(versionAnnotation.value(), service);
             }
         }
-
-//        this.defaultService = versions.getOrDefault("1", services.get(0));
     }
 
     public IUserService getService(String version) throws Exception {
@@ -32,8 +29,5 @@ public class UserServiceFactory {
         return versions.get(version);
     }
 
-//    public IUserService getService() {
-//        return defaultService;
-//    }
 }
 

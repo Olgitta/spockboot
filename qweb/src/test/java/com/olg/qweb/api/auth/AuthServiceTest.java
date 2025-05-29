@@ -16,7 +16,6 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 public class AuthServiceTest {
 
     @Test

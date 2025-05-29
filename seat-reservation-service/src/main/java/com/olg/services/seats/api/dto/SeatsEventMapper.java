@@ -1,32 +1,17 @@
 package com.olg.services.seats.api.dto;
 
+import com.olg.domain.enums.SeatStatus;
 import com.olg.mysql.seats.Seat;
-import com.olg.mysql.seats.SeatsEvent;
 import com.olg.services.seats.utils.RedisKeyFactory;
-import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
 
 public class SeatsEventMapper {
 
-    public static SeatResponse map(SeatsEvent seat) {
+    public static SeatResponse map(Seat seat, SeatStatus statusId) {
         SeatResponse response = new SeatResponse();
-//
-//        response.setEventId(seatsEvent.getEventId());
-//        response.setVenueId(seatsEvent.getVenueId());
-        response.setRowNumber(seat.getRowNumber());
-        response.setSeatNumber(seat.getSeatNumber());
-        response.setStatusId(seat.getStatusId());
 
-        return response;
-    }
-
-    public static SeatResponse map(Seat seat, byte statusId) {
-        SeatResponse response = new SeatResponse();
-//
-//        response.setEventId(seatsEvent.getEventId());
-//        response.setVenueId(seatsEvent.getVenueId());
         response.setRowNumber(seat.getRowNumber());
         response.setSeatNumber(seat.getSeatNumber());
         response.setStatusId(statusId);
@@ -34,27 +19,32 @@ public class SeatsEventMapper {
         return response;
     }
 
-//    public static List<SeatResponse> map(List<SeatsEvent> seats) {
-//        return seats.stream()
-//                .map(SeatsEventMapper::map)
-//                .toList();
-//    }
-//
-//    public static List<SeatResponse> map(List<Seat> seats) {
-//        return seats.stream()
-//                .map(SeatsEventMapper::map)
-//                .toList();
-//    }
-
-    public static List<SeatResponse> map(List<Seat> seats, Map<String, String> locked) {
-        return seats.stream()
+    public static List<SeatResponse> map(List<Seat> seatList, Map<String, String> lockedSeats, Map<String, String> bookedSeats) {
+        return seatList.stream()
                 .map((seat) -> {
-                    String field = RedisKeyFactory.reservationField(
-                            seat.getVenueId(),
+                    String lockedKey = RedisKeyFactory.reservationHashField(
                             seat.getRowNumber(),
                             seat.getSeatNumber()
                     );
-                    byte statusId = (locked.get(field) != null) ? (byte) 2 : (byte) 1;
+                    String bookedKey = RedisKeyFactory.bookingHashField(
+                            seat.getRowNumber(),
+                            seat.getSeatNumber()
+                    );
+
+                    SeatStatus statusId;
+
+                    // 1. Проверяем, забронировано ли место (наивысший приоритет)
+                    if (bookedSeats.get(bookedKey) != null) {
+                        statusId = SeatStatus.BOOKED;
+                    }
+                    // 2. Если не забронировано, проверяем, заблокировано ли место
+                    else if (lockedSeats.get(lockedKey) != null) {
+                        statusId = SeatStatus.LOCKED;
+                    }
+                    // 3. Если ни то, ни другое, место доступно
+                    else {
+                        statusId = SeatStatus.AVAILABLE;
+                    }
 
                     return SeatsEventMapper.map(seat, statusId);
                 })
