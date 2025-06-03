@@ -3,6 +3,8 @@ package com.olg.services.booking.api.seats.dto;
 import com.olg.domain.enums.SeatStatus;
 import com.olg.mysql.seats.Seat;
 import com.olg.services.booking.utils.RedisKeyFactory;
+import com.olg.services.booking.utils.Validations;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 import java.util.Map;

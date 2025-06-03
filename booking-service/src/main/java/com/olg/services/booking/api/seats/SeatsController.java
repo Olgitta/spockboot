@@ -3,9 +3,10 @@ package com.olg.services.booking.api.seats;
 import com.olg.services.booking.api.ApiResponse;
 import com.olg.services.booking.api.seats.dto.SeatRequest;
 import com.olg.services.booking.api.seats.dto.SeatResponse;
-import com.olg.services.booking.exceptions.SeatAlreadyLockedException;
+import com.olg.services.booking.exceptions.SeatOperationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,8 @@ import java.util.List;
 @RequestMapping("/seats")
 public class SeatsController {
 
+
+    private static final Logger log = LoggerFactory.getLogger(SeatsController.class);
     private final SeatsService seatsService;
 
     public SeatsController(SeatsService seatsService) {
@@ -30,7 +33,7 @@ public class SeatsController {
 
             return ResponseEntity.ok(new ApiResponse<>(MDC.get("requestId"), response));
         } catch (Exception e) {
-//            log.error("Something went wrong", e);
+            log.error("Something went wrong", e);
             return ResponseEntity.badRequest().body(null);
         }
 
@@ -47,10 +50,8 @@ public class SeatsController {
             );
 
             return ResponseEntity.ok().build();
-        } catch (SeatAlreadyLockedException seatAlreadyLockedException) {
+        } catch (SeatOperationException seatOperationException) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        } catch (DataAccessException dataAccessException) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

@@ -3,8 +3,6 @@ package com.olg.services.booking.api.seats.dto;
 import com.olg.domain.enums.SeatStatus;
 import com.olg.mysql.seats.Seat;
 
-import com.olg.services.booking.api.seats.dto.SeatResponse;
-import com.olg.services.booking.api.seats.dto.SeatsEventMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -157,9 +155,6 @@ class SeatsEventMapperTest {
         List<Seat> seatList = Collections.emptyList();
         Map<String, String> lockedSeats = new HashMap<>();
         Map<String, String> bookedSeats = new HashMap<>();
-
-        // No need to mock RedisKeyFactory for empty list as map method won't be called
-        // for each seat.
 
         // When
         List<SeatResponse> result = SeatsEventMapper.map(seatList, lockedSeats, bookedSeats);
