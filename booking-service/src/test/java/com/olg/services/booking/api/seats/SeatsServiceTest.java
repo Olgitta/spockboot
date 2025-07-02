@@ -1,5 +1,6 @@
 package com.olg.services.booking.api.seats;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.olg.kafka.producers.GenericKafkaProducer;
 import com.olg.mysql.seats.Seat;
@@ -54,13 +55,13 @@ class SeatsServiceTest {
     @Test
     void lock_successfulRedisCall_doesNotThrow() throws Exception {
         Long eventId = 1L, venueId = 2L;
-        String row = "A", seat = "1";
+        String row = "A", seat = "1", lockerId = "abc";
         String jsonPayload = "[\"LOCKED\",\"A\",\"1\"]";
 
 //        when(objectMapper.writeValueAsString(any())).thenReturn(jsonPayload);
         when(redisService.executeLuaScript(any(), anyList(), anyList())).thenReturn("OK");
 
-        assertDoesNotThrow(() -> seatsService.lock(eventId, venueId, row, seat));
+        assertDoesNotThrow(() -> seatsService.lock(eventId, venueId, row, seat, lockerId));
     }
 
 //    @Test
@@ -90,11 +91,15 @@ class SeatsServiceTest {
     }
 
     @Test
-    void getSeats_successfulReturnsMappedSeats() {
+    void getSeats_successfulReturnsMappedSeats() throws JsonProcessingException {
         Long eventId = 1L, venueId = 2L;
 
         List<Seat> seats = List.of(new Seat(/* mock your seat here */));
-        Map<String, String> locked = Map.of("A:1", Instant.now().toString());
+
+        List<String> hashFieldValuePayload2 = List.of(Instant.now().toString(), "lockerId");
+        String hashFieldValue2 = objectMapper.writeValueAsString(hashFieldValuePayload2);
+
+        Map<String, String> locked = Map.of("A:1", hashFieldValue2);
         Map<String, String> booked = Map.of();
 
         String lockedHashKey = RedisKeyFactory.reservationHashKey(eventId, venueId);
@@ -133,10 +138,16 @@ class SeatsServiceTest {
     }
 
     @Test
-    void validateLockedHash_skipsExpiredEntries() {
+    void validateLockedHash_skipsExpiredEntries() throws JsonProcessingException {
+        List<String> hashFieldValuePayload1 = List.of(Instant.now().minusSeconds(200).toString(), "lockerId");
+        String hashFieldValue1 = objectMapper.writeValueAsString(hashFieldValuePayload1);
+
+        List<String> hashFieldValuePayload2 = List.of(Instant.now().toString(), "lockerId");
+        String hashFieldValue2 = objectMapper.writeValueAsString(hashFieldValuePayload2);
+
         Map<String, String> input = Map.of(
-                "A_1", Instant.now().minusSeconds(200).toString(),
-                "A_2", Instant.now().toString()
+                "A_1", hashFieldValue1,
+                "A_2", hashFieldValue2
         );
 
         when(redisService.executeLuaScript(any(), anyList(), anyList())).thenReturn("OK");

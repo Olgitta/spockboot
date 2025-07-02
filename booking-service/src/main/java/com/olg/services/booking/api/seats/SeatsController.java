@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/seats")
+@RequestMapping("api/seats")
 public class SeatsController {
 
 
@@ -46,7 +46,8 @@ public class SeatsController {
                     request.eventId(),
                     request.venueId(),
                     request.rowNumber(),
-                    request.seatNumber()
+                    request.seatNumber(),
+                    request.lockerId()
             );
 
             return ResponseEntity.ok().build();

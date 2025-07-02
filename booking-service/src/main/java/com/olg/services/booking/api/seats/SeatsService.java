@@ -1,6 +1,7 @@
 package com.olg.services.booking.api.seats;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.olg.domain.enums.SeatStatus;
 import com.olg.kafka.producers.GenericKafkaProducer;
@@ -48,22 +49,25 @@ public class SeatsService {
         this.lockTtlSeconds = lockTtlSeconds;
     }
 
-    public void lock(Long eventId, Long venueId, String rowNumber, String seatNumber) {
+    public void lock(Long eventId, Long venueId, String rowNumber, String seatNumber, String lockerId) {
         String hashKey = RedisKeyFactory.reservationHashKey(eventId, venueId);
         String field = RedisKeyFactory.reservationHashField(rowNumber, seatNumber);
         String lockKey = RedisKeyFactory.lockKey(eventId, venueId, rowNumber, seatNumber);
         String timestamp = Instant.now().toString();
         String channelName = RedisKeyFactory.channelName(eventId, venueId);
-        List<Object> messagePayload = List.of(SeatStatus.LOCKED, rowNumber, seatNumber);
+        List<Object> messagePayload = List.of(SeatStatus.LOCKED, rowNumber, seatNumber, lockerId);
+        List<String> hashFieldValuePayload = List.of(timestamp, lockerId);
 
         try {
             String channelMessage = objectMapper.writeValueAsString(messagePayload);
+            String hashFieldValue = objectMapper.writeValueAsString(hashFieldValuePayload);
             // set and publish redis
             List<String> keys = Arrays.asList(lockKey, hashKey, field, channelName);
             List<String> args = Arrays.asList(
                     String.valueOf(lockTtlSeconds),
-                    timestamp,
-                    channelMessage
+                    hashFieldValue,
+                    channelMessage,
+                    lockerId
             );
             String result = redisService.executeLuaScript(
                     RedisLuaScripts.LUA_LOCK_SCRIPT,
@@ -167,8 +171,14 @@ public class SeatsService {
     private Map<String, String> validateLockedHash(String lockedHashKey, Map<String, String> locked, Long eventId, Long venueId) {
         Map<String, String> result = new HashMap<>();
         for (Map.Entry<String, String> entry : locked.entrySet()) {
-            String timestampString = entry.getValue();
-            boolean expired = Validations.isExpired(timestampString, lockTtlSeconds);
+            List<String> valuePayload = null;
+            try {
+                valuePayload = objectMapper.readValue(entry.getValue(), new TypeReference<>() {});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
+            boolean expired = Validations.isExpired(valuePayload.get(0), lockTtlSeconds);
             if (expired) {
                 RedisKeyFactory.SeatKeyDetails keyDetails = RedisKeyFactory.parseReservationField(entry.getKey(), eventId, venueId);
                 unlock(eventId, venueId, keyDetails.rowNumber(), keyDetails.seatNumber());

@@ -6,6 +6,6 @@ management:
 
 app:
   public-paths:
-    - /seats/**
+    - /api/**
     - /actuator/**
     - /h2-console/**

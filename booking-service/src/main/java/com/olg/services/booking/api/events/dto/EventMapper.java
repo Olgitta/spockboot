@@ -1,7 +1,6 @@
-package com.olg.qweb.api.events.dto;
+package com.olg.services.booking.api.events.dto;
 
 import com.olg.mysql.events.Event;
-
 import java.util.List;
 
 public class EventMapper {

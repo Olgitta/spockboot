@@ -8,6 +8,7 @@ public class SeatResponse {
     private String rowNumber;
     private String seatNumber;
     private SeatStatus statusId;
+    private String lockerId;
 
     public String getRowNumber() {
         return rowNumber;
@@ -31,6 +32,14 @@ public class SeatResponse {
 
     public void setStatusId(SeatStatus statusId) {
         this.statusId = statusId;
+    }
+
+    public String getLockerId() {
+        return lockerId;
+    }
+
+    public void setLockerId(String lockerId) {
+        this.lockerId = lockerId;
     }
 
     @Override

@@ -1,10 +1,9 @@
-package com.olg.qweb.api.events;
-
+package com.olg.services.booking.api.events;
 
 import com.olg.mysql.events.Event;
 import com.olg.mysql.events.EventRepository;
-import com.olg.qweb.api.events.dto.EventMapper;
-import com.olg.qweb.api.events.dto.EventResponse;
+import com.olg.services.booking.api.events.dto.EventMapper;
+import com.olg.services.booking.api.events.dto.EventResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

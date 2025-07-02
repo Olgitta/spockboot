@@ -15,9 +15,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
   kafka:
     bootstrap-servers: localhost:9092
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 server:
   port: 8081
@@ -41,7 +44,7 @@ management:
 
 app:
   public-paths:
-    - /seats/**
+    - /api/**
   kafka-topic: seat_reservation
   seat-lock-ttl-seconds: 300
 

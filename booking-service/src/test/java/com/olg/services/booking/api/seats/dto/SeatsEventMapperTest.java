@@ -25,9 +25,10 @@ class SeatsEventMapperTest {
         // Given
         Seat seat = createSeat("A", "1", 1L);
         SeatStatus status = SeatStatus.BOOKED;
+        String lockerId = "abc";
 
         // When
-        SeatResponse response = SeatsEventMapper.map(seat, status);
+        SeatResponse response = SeatsEventMapper.map(seat, status, lockerId);
 
         // Then
         assertNotNull(response);
@@ -83,7 +84,7 @@ class SeatsEventMapperTest {
         List<Seat> seatList = Arrays.asList(seatA1, seatA2);
 
         Map<String, String> lockedSeats = new HashMap<>();
-        lockedSeats.put("A_1", "some_lock_token"); // Ключ в Map - это поле хэша
+        lockedSeats.put("A_1", "[\"2025-06-05T18:17:42.874269Z\",\"abc\"]"); // Ключ в Map - это поле хэша
         Map<String, String> bookedSeats = Collections.emptyMap();
 
 //        try (MockedStatic<RedisKeyFactory> mockedStatic = Mockito.mockStatic(RedisKeyFactory.class)) {
@@ -118,11 +119,11 @@ class SeatsEventMapperTest {
         List<Seat> seatList = Arrays.asList(seatA1, seatA2);
 
         Map<String, String> lockedSeats = new HashMap<>();
-        lockedSeats.put("A_1", "some_lock_token"); // Место A1 заблокировано
-        lockedSeats.put("A_2", "some_lock_token"); // Место A2 заблокировано
+        lockedSeats.put("A_1", "[\"2025-06-05T18:17:42.874269Z\",\"abc\"]"); // Место A1 заблокировано
+        lockedSeats.put("A_2", "[\"2025-06-05T18:17:42.874269Z\",\"abc\"]"); // Место A2 заблокировано
 
         Map<String, String> bookedSeats = new HashMap<>();
-        bookedSeats.put("A_1", "some_booking_ref"); // Место A1 забронировано (должно иметь приоритет)
+        bookedSeats.put("A_1", "[\"2025-06-05T18:17:42.874269Z\",\"xyz\"]"); // Место A1 забронировано (должно иметь приоритет)
 
 //        try (MockedStatic<RedisKeyFactory> mockedStatic = Mockito.mockStatic(RedisKeyFactory.class)) {
 //            mockedStatic.when(() -> RedisKeyFactory.reservationHashField("A", "1"))

@@ -1,7 +1,7 @@
-package com.olg.qweb.api.events;
+package com.olg.services.booking.api.events;
 
-import com.olg.qweb.api.ApiResponse;
-import com.olg.qweb.api.events.dto.EventResponse;
+import com.olg.services.booking.api.ApiResponse;
+import com.olg.services.booking.api.events.dto.EventResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -48,4 +48,5 @@ public class EventsController {
 //
 //    // etc.
 }
+
 

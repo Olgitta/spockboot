@@ -1,4 +1,4 @@
-package com.olg.qweb.api.events.dto;
+package com.olg.services.booking.api.events.dto;
 
 import java.time.LocalDateTime;
 
@@ -58,3 +58,4 @@ public class EventResponse {
         this.venueId = venueId;
     }
 }
+
