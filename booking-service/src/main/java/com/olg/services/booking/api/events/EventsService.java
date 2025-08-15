@@ -1,7 +1,7 @@
 package com.olg.services.booking.api.events;
 
-import com.olg.mysql.events.Event;
-import com.olg.mysql.events.EventRepository;
+import com.olg.postgressql.events.Event;
+import com.olg.postgressql.events.EventRepository;
 import com.olg.services.booking.api.events.dto.EventMapper;
 import com.olg.services.booking.api.events.dto.EventResponse;
 import org.slf4j.Logger;

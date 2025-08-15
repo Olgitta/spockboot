@@ -1,7 +1,7 @@
 package com.olg.services.booking.api.seats.dto;
 
 import com.olg.domain.enums.SeatStatus;
-import com.olg.mysql.seats.Seat;
+import com.olg.postgressql.seats.Seat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

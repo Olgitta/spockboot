@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.olg.domain.enums.SeatStatus;
-import com.olg.mysql.seats.Seat;
+import com.olg.postgressql.seats.Seat;
 import com.olg.services.booking.utils.RedisKeyFactory;
 
 import java.util.List;

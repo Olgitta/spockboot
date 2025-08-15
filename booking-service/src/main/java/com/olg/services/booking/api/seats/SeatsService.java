@@ -4,9 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.olg.domain.enums.SeatStatus;
-import com.olg.kafka.producers.GenericKafkaProducer;
-import com.olg.mysql.seats.Seat;
-import com.olg.mysql.seats.SeatRepository;
+import com.olg.postgressql.seats.Seat;
+import com.olg.postgressql.seats.SeatRepository;
 import com.olg.redis.service.RedisService;
 import com.olg.services.booking.api.seats.dto.SeatsEventMapper;
 import com.olg.services.booking.api.seats.dto.SeatResponse;
@@ -31,20 +30,17 @@ public class SeatsService {
     private final ObjectMapper objectMapper;
     private final RedisService redisService;
     private final SeatRepository seatRepository;
-    private final GenericKafkaProducer kafkaProducer;
     private final String kafkaTopic;
     private final long lockTtlSeconds;
 
     public SeatsService(ObjectMapper objectMapper,
                         RedisService redisService,
                         SeatRepository seatRepository,
-                        GenericKafkaProducer kafkaProducer,
                         @Value("${app.kafka-topic}") String kafkaTopic,
                         @Value(("${app.seat-lock-ttl-seconds}")) long lockTtlSeconds) {
         this.objectMapper = objectMapper;
         this.redisService = redisService;
         this.seatRepository = seatRepository;
-        this.kafkaProducer = kafkaProducer;
         this.kafkaTopic = kafkaTopic;
         this.lockTtlSeconds = lockTtlSeconds;
     }

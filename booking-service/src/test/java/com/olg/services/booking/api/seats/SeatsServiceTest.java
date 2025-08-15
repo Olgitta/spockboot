@@ -2,9 +2,8 @@ package com.olg.services.booking.api.seats;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.olg.kafka.producers.GenericKafkaProducer;
-import com.olg.mysql.seats.Seat;
-import com.olg.mysql.seats.SeatRepository;
+import com.olg.postgressql.seats.Seat;
+import com.olg.postgressql.seats.SeatRepository;
 
 import com.olg.redis.service.RedisService;
 import com.olg.services.booking.api.seats.dto.SeatResponse;
@@ -35,7 +34,6 @@ class SeatsServiceTest {
     private ObjectMapper objectMapper = new ObjectMapper();
     @Mock private RedisService redisService;
     @Mock private SeatRepository seatRepository;
-    @Mock private GenericKafkaProducer kafkaProducer;
 
 //    @InjectMocks
     private SeatsService seatsService;
@@ -46,7 +44,6 @@ class SeatsServiceTest {
                 objectMapper,
                 redisService,
                 seatRepository,
-                kafkaProducer,
                 "kafka-topic",
                 120L
         );

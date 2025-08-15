@@ -9,13 +9,26 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://mysql:3306/spockboot?useSSL=false&serverTimezone=UTC
+    url: jdbc:postgresql://dpg-d2fee36mcj7s73enqi40-a.oregon-postgres.render.com/spok
+    username: spok_user
+    password: VZih6lxGVwQsIfxU3O77PeqVXmuHDc1B
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   kafka:
     bootstrap-servers: kafka:9092
   data:
     redis:
-      host: redis
+      host: oregon-keyvalue.render.com
       port: 6379
+      username: red-d2fh1jmr433s73bblha0
+      password: UFRyBMbNMMekDXYzod5hENTNbrLiMseL
+      ssl:
+        enabled: true
 
 app:
   public-paths:
