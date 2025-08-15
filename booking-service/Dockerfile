@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the jar file (built by Maven/Gradle) into the image
-COPY target/*.jar app.jar
+COPY builds/*.jar app.jar
 
 # Expose port (adjust to match your Spring Boot `server.port`)
 EXPOSE 8080
