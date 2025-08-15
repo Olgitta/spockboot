@@ -49,14 +49,14 @@ public class SeatsService {
         this.lockTtlSeconds = lockTtlSeconds;
     }
 
-    public void lock(Long eventId, Long venueId, String rowNumber, String seatNumber, String lockerId) {
+    public void lock(Long eventId, Long venueId, String rowNumber, String seatNumber, String guestId) {
         String hashKey = RedisKeyFactory.reservationHashKey(eventId, venueId);
         String field = RedisKeyFactory.reservationHashField(rowNumber, seatNumber);
         String lockKey = RedisKeyFactory.lockKey(eventId, venueId, rowNumber, seatNumber);
         String timestamp = Instant.now().toString();
         String channelName = RedisKeyFactory.channelName(eventId, venueId);
-        List<Object> messagePayload = List.of(SeatStatus.LOCKED, rowNumber, seatNumber, lockerId);
-        List<String> hashFieldValuePayload = List.of(timestamp, lockerId);
+        List<Object> messagePayload = List.of(SeatStatus.LOCKED, rowNumber, seatNumber, guestId);
+        List<String> hashFieldValuePayload = List.of(timestamp, guestId);
 
         try {
             String channelMessage = objectMapper.writeValueAsString(messagePayload);
@@ -67,7 +67,7 @@ public class SeatsService {
                     String.valueOf(lockTtlSeconds),
                     hashFieldValue,
                     channelMessage,
-                    lockerId
+                    guestId
             );
             String result = redisService.executeLuaScript(
                     RedisLuaScripts.LUA_LOCK_SCRIPT,

@@ -55,13 +55,13 @@ class SeatsServiceTest {
     @Test
     void lock_successfulRedisCall_doesNotThrow() throws Exception {
         Long eventId = 1L, venueId = 2L;
-        String row = "A", seat = "1", lockerId = "abc";
+        String row = "A", seat = "1", guestId = "abc";
         String jsonPayload = "[\"LOCKED\",\"A\",\"1\"]";
 
 //        when(objectMapper.writeValueAsString(any())).thenReturn(jsonPayload);
         when(redisService.executeLuaScript(any(), anyList(), anyList())).thenReturn("OK");
 
-        assertDoesNotThrow(() -> seatsService.lock(eventId, venueId, row, seat, lockerId));
+        assertDoesNotThrow(() -> seatsService.lock(eventId, venueId, row, seat, guestId));
     }
 
 //    @Test
@@ -96,7 +96,7 @@ class SeatsServiceTest {
 
         List<Seat> seats = List.of(new Seat(/* mock your seat here */));
 
-        List<String> hashFieldValuePayload2 = List.of(Instant.now().toString(), "lockerId");
+        List<String> hashFieldValuePayload2 = List.of(Instant.now().toString(), "id");
         String hashFieldValue2 = objectMapper.writeValueAsString(hashFieldValuePayload2);
 
         Map<String, String> locked = Map.of("A:1", hashFieldValue2);
@@ -139,10 +139,10 @@ class SeatsServiceTest {
 
     @Test
     void validateLockedHash_skipsExpiredEntries() throws JsonProcessingException {
-        List<String> hashFieldValuePayload1 = List.of(Instant.now().minusSeconds(200).toString(), "lockerId");
+        List<String> hashFieldValuePayload1 = List.of(Instant.now().minusSeconds(200).toString(), "id");
         String hashFieldValue1 = objectMapper.writeValueAsString(hashFieldValuePayload1);
 
-        List<String> hashFieldValuePayload2 = List.of(Instant.now().toString(), "lockerId");
+        List<String> hashFieldValuePayload2 = List.of(Instant.now().toString(), "id");
         String hashFieldValue2 = objectMapper.writeValueAsString(hashFieldValuePayload2);
 
         Map<String, String> input = Map.of(

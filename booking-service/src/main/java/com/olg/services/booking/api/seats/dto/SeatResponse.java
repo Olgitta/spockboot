@@ -5,10 +5,11 @@ import com.olg.domain.enums.SeatStatus;
 import java.util.Objects;
 
 public class SeatResponse {
+    private Long id;
     private String rowNumber;
     private String seatNumber;
     private SeatStatus statusId;
-    private String lockerId;
+    private String guestId;
 
     public String getRowNumber() {
         return rowNumber;
@@ -34,26 +35,31 @@ public class SeatResponse {
         this.statusId = statusId;
     }
 
-    public String getLockerId() {
-        return lockerId;
+    public Long getId() {
+        return id;
     }
 
-    public void setLockerId(String lockerId) {
-        this.lockerId = lockerId;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getGuestId() {
+        return guestId;
+    }
+
+    public void setGuestId(String guestId) {
+        this.guestId = guestId;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SeatResponse that = (SeatResponse) o;
-        return Objects.equals(rowNumber, that.rowNumber) &&
-                Objects.equals(seatNumber, that.seatNumber) &&
-                statusId == that.statusId; // Для enum можно сравнивать напрямую
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getRowNumber(), that.getRowNumber()) && Objects.equals(getSeatNumber(), that.getSeatNumber());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getRowNumber(), getSeatNumber(), getStatusId());
+        return Objects.hash(getId(), getRowNumber(), getSeatNumber());
     }
 }

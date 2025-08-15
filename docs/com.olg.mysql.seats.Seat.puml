@@ -1,0 +1,49 @@
+@startuml
+package com.olg.mysql {
+    abstract class BaseEntity {
+        # Long id
+        # LocalDateTime createdAt
+        # LocalDateTime updatedAt
+        + Long getId()
+        + LocalDateTime getCreatedAt()
+        + LocalDateTime getUpdatedAt()
+        + void setId(Long id)
+        + void setCreatedAt(LocalDateTime createdAt)
+        + void setUpdatedAt(LocalDateTime updatedAt)
+        --
+        + onCreate()
+        + onUpdate()
+    }
+}
+
+package com.olg.mysql.seats {
+    class Seat extends BaseEntity {
+        - String rowNumber
+        - String seatNumber
+        - Long venueId
+        + String getRowNumber()
+        + void setRowNumber(String rowNumber)
+        + String getSeatNumber()
+        + void setSeatNumber(String seatNumber)
+        + Long getVenueId()
+        + void setVenueId(Long venueId)
+    }
+}
+
+package com.olg.mysql.events {
+    class Event extends BaseEntity {
+        - String name
+        - byte typeId
+        - LocalDateTime dateTime
+        - Long venueId
+        + String getName()
+        + void setName(String name)
+        + byte getType()
+        + void setType(byte typeId)
+        + LocalDateTime getDateTime()
+        + void setDateTime(LocalDateTime dateTime)
+        + Long getVenueId()
+        + void setVenueId(Long venueId)
+    }
+}
+@enduml

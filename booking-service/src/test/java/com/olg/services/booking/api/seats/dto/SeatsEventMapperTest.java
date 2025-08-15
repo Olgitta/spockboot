@@ -25,10 +25,10 @@ class SeatsEventMapperTest {
         // Given
         Seat seat = createSeat("A", "1", 1L);
         SeatStatus status = SeatStatus.BOOKED;
-        String lockerId = "abc";
+        String id = "abc";
 
         // When
-        SeatResponse response = SeatsEventMapper.map(seat, status, lockerId);
+        SeatResponse response = SeatsEventMapper.map(seat, status, id);
 
         // Then
         assertNotNull(response);

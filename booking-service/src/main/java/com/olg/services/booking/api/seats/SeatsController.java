@@ -47,7 +47,7 @@ public class SeatsController {
                     request.venueId(),
                     request.rowNumber(),
                     request.seatNumber(),
-                    request.lockerId()
+                    request.guestId()
             );
 
             return ResponseEntity.ok().build();
@@ -60,7 +60,8 @@ public class SeatsController {
 
     @DeleteMapping("locks")
     public ResponseEntity<Void> unlock(@RequestBody SeatRequest request) {
-        seatsService.unlock(request.eventId(),
+        seatsService.unlock(
+                request.eventId(),
                 request.venueId(),
                 request.rowNumber(),
                 request.seatNumber());
