@@ -15,6 +15,20 @@ services:
       - ./containers_setup/mysql/init:/docker-entrypoint-initdb.d
       - ./containers_data/mysql:/var/lib/mysql
 
+  postgres:
+    image: postgres:15
+    container_name: postgressql
+    restart: always
+    environment:
+      POSTGRES_USER: usr
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: spok
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./containers_data/postgres:/var/lib/postgresql/data
+      - ./containers_setup/postgress/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
   redis:
     image: redis:7.2-alpine
     container_name: redis
