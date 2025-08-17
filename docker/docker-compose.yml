@@ -18,6 +18,8 @@ services:
   postgres:
     image: postgres:15
     container_name: postgressql
+    networks:
+      - spock_net
     restart: always
     environment:
       POSTGRES_USER: usr

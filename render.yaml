@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: booking-service
+    env: java
+    plan: free
+    repo: https://github.com/Olgitta/spockboot.git
+    branch: PostgreSQL
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar booking-service/target/booking-service-*.jar
+    autoDeploy: false
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: PROFILE
+        value: production

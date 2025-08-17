@@ -9,7 +9,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/spok
+    url: jdbc:postgresql://postgressql:5432/spok
     username: usr
     password: 12345
     driver-class-name: org.postgresql.Driver
@@ -24,7 +24,7 @@ spring:
     bootstrap-servers: kafka:9092
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
 
 app:
