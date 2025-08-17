@@ -1,7 +1,7 @@
 services:
   - type: web
     name: booking-service
-    env: java
+    runtime: java
     plan: free
     repo: https://github.com/Olgitta/spockboot.git
     branch: PostgreSQL
