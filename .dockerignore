@@ -1,0 +1,11 @@
+.git
+target
+*/target
+node_modules
+.idea
+.vscode
+.DS_Store
+docker
+docs
+readmes
+Makefile
