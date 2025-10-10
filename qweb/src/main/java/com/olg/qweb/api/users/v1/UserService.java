@@ -1,8 +1,8 @@
 package com.olg.qweb.api.users.v1;
 
 import com.olg.core.annotations.ApiVersion;
-import com.olg.mysql.users.User;
-import com.olg.mysql.users.UserRepository;
+import com.olg.core.dbsql.users.User;
+import com.olg.core.dbsql.users.UserRepository;
 import com.olg.qweb.api.users.IUserResponse;
 import com.olg.qweb.api.users.IUserService;
 import com.olg.qweb.api.users.v1.dto.UserMapper;

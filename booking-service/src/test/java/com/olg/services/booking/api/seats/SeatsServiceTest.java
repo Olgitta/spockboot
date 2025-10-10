@@ -2,9 +2,9 @@ package com.olg.services.booking.api.seats;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.olg.postgressql.seats.Seat;
-import com.olg.postgressql.seats.SeatRepository;
 
+import com.olg.core.dbsql.seats.Seat;
+import com.olg.core.dbsql.seats.SeatRepository;
 import com.olg.redis.service.RedisService;
 import com.olg.services.booking.api.seats.dto.SeatResponse;
 import com.olg.services.booking.exceptions.SeatErrorCodes;

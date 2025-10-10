@@ -17,12 +17,9 @@
     <modules>
         <module>core</module>
         <module>qweb</module>
-        <module>mysql-infra</module>
         <module>redis-infra</module>
         <module>booking-service</module>
-        <module>domain-core</module>
         <module>kafka-infra</module>
-        <module>postgressql-infra</module>
     </modules>
 
     <properties>

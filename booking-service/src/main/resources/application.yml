@@ -1,27 +1,8 @@
 spring:
   application:
-    name: Seats
+    name: Booking Service
   profiles:
     active: ${PROFILE:local}
-
-  datasource:
-    url: jdbc:postgresql://localhost:5432/spok
-    username: usr
-    password: 12345
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
-  kafka:
-    bootstrap-servers: localhost:9092
-  data:
-    redis:
-      host: localhost
-      port: 6379
 
 server:
   port: 8081

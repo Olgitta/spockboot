@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {"com.olg"},
         exclude = {UserDetailsServiceAutoConfiguration.class})
-@EnableJpaRepositories(basePackages = "com.olg.mysql")
-@EntityScan(basePackages = "com.olg.mysql")
+@EnableJpaRepositories(basePackages = "com.olg.core")
+@EntityScan(basePackages = "com.olg.core")
 @EnableConfigurationProperties(AppConfig.class)
 public class App {
     public static void main(String[] args) {
