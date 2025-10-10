@@ -1,0 +1,39 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+#    internal: postgresql://spok_user:VZih6lxGVwQsIfxU3O77PeqVXmuHDc1B@dpg-d2fee36mcj7s73enqi40-a/spok
+#    external: url: jdbc:postgresql://dpg-d2fee36mcj7s73enqi40-a.oregon-postgres.render.com/spok
+    url: jdbc:postgresql://dpg-d2fee36mcj7s73enqi40-a/spok
+    username: spok_user
+    password: VZih6lxGVwQsIfxU3O77PeqVXmuHDc1B
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  kafka:
+    bootstrap-servers: kafka:9092
+  data:
+    redis:
+#      // internal: redis://red-d2fh1jmr433s73bblha0:6379
+      host: red-d2fh1jmr433s73bblha0
+      port: 6379
+#      ssl:
+#        enabled: true
+
+app:
+  public-paths:
+    - /api/**
+    - /actuator/**
+    - /h2-console/**

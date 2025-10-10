@@ -1,6 +1,6 @@
 package com.olg.services.booking.api.seats.dto;
 
-import com.olg.domain.enums.SeatStatus;
+import com.olg.core.domain.enums.SeatStatus;
 
 import java.util.Objects;
 

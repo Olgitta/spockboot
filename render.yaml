@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: booking-service
+    runtime: docker
+    plan: free
+    repo: https://github.com/Olgitta/spockboot.git
+    branch: PostgreSQL
+    autoDeploy: false
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: PROFILE
+        value: production

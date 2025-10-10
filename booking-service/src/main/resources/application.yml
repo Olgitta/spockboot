@@ -1,26 +1,8 @@
 spring:
   application:
-    name: Seats
+    name: Booking Service
   profiles:
     active: ${PROFILE:local}
-  datasource:
-    url: jdbc:mysql://localhost:3306/spockboot?useSSL=false&serverTimezone=UTC
-    username: root
-    hikari:
-      connection-timeout: 5000
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  kafka:
-    bootstrap-servers: localhost:9092
-  data:
-    redis:
-      host: localhost
-      port: 6379
 
 server:
   port: 8081

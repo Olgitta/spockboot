@@ -1,6 +1,6 @@
 package com.olg.qweb.api.users.v1.dto;
 
-import com.olg.mysql.users.User;
+import com.olg.core.dbsql.users.User;
 import com.olg.qweb.api.users.IUserResponse;
 
 import java.util.List;

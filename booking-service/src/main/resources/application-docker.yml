@@ -9,7 +9,17 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://mysql:3306/spockboot?useSSL=false&serverTimezone=UTC
+    url: jdbc:postgresql://postgressql:5432/spok
+    username: usr
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
   kafka:
     bootstrap-servers: kafka:9092
   data:
