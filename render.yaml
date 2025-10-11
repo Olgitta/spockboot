@@ -4,7 +4,7 @@ services:
     runtime: docker
     plan: free
     repo: https://github.com/Olgitta/spockboot.git
-    branch: PostgreSQL
+    branch: main
     autoDeploy: false
     envVars:
       - key: SPRING_PROFILES_ACTIVE
