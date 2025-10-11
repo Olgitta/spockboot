@@ -23,6 +23,10 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.*;
 
+/**
+ * Service class for managing seat reservations.
+ * Provides methods to lock, unlock, and retrieve seat information.
+ */
 @Service
 public class SeatsService {
 
@@ -33,6 +37,15 @@ public class SeatsService {
     private final String kafkaTopic;
     private final long lockTtlSeconds;
 
+    /**
+     * Constructor for SeatsService.
+     *
+     * @param objectMapper   ObjectMapper for JSON processing.
+     * @param redisService   Redis service for interacting with Redis.
+     * @param seatRepository Repository for accessing seat data.
+     * @param kafkaTopic     Kafka topic for publishing messages.
+     * @param lockTtlSeconds Time-to-live for seat locks in seconds.
+     */
     public SeatsService(ObjectMapper objectMapper,
                         RedisService redisService,
                         SeatRepository seatRepository,
@@ -45,6 +58,15 @@ public class SeatsService {
         this.lockTtlSeconds = lockTtlSeconds;
     }
 
+    /**
+     * Locks a seat for a specific event and venue.
+     *
+     * @param eventId    ID of the event.
+     * @param venueId    ID of the venue.
+     * @param rowNumber  Row number of the seat.
+     * @param seatNumber Seat number.
+     * @param guestId    ID of the guest locking the seat.
+     */
     public void lock(Long eventId, Long venueId, String rowNumber, String seatNumber, String guestId) {
         String hashKey = RedisKeyFactory.reservationHashKey(eventId, venueId);
         String field = RedisKeyFactory.reservationHashField(rowNumber, seatNumber);
@@ -57,7 +79,7 @@ public class SeatsService {
         try {
             String channelMessage = objectMapper.writeValueAsString(messagePayload);
             String hashFieldValue = objectMapper.writeValueAsString(hashFieldValuePayload);
-            // set and publish redis
+            // Set and publish to Redis
             List<String> keys = Arrays.asList(lockKey, hashKey, field, channelName);
             List<String> args = Arrays.asList(
                     String.valueOf(lockTtlSeconds),
@@ -76,11 +98,7 @@ public class SeatsService {
                         "Lock failed: " + lockKey);
             }
 
-            // todo: think about it:
-            // send to kafka
-//            BaseKafkaMessage<SeatReservationMessage> message = SeatKafkaMessageBuilder.buildLockMessage(eventId, venueId, rowNumber, seatNumber);
-//            kafkaProducer.send(kafkaTopic, message);
-
+            // TODO: Consider sending a message to Kafka
         } catch (DataAccessException exception) {
             throw new SeatOperationException(SeatErrorCodes.REDIS_DATA_ACCESS_ERROR,
                     "Lock failed: " + exception.getMessage(), exception);
@@ -93,6 +111,14 @@ public class SeatsService {
         }
     }
 
+    /**
+     * Unlocks a seat for a specific event and venue.
+     *
+     * @param eventId    ID of the event.
+     * @param venueId    ID of the venue.
+     * @param rowNumber  Row number of the seat.
+     * @param seatNumber Seat number.
+     */
     public void unlock(Long eventId, Long venueId, String rowNumber, String seatNumber) {
         String hashKey = RedisKeyFactory.reservationHashKey(eventId, venueId);
         String field = RedisKeyFactory.reservationHashField(rowNumber, seatNumber);
@@ -102,7 +128,7 @@ public class SeatsService {
 
         try {
             String channelMessage = objectMapper.writeValueAsString(messagePayload);
-            // set and publish redis
+            // Set and publish to Redis
             List<String> keys = Arrays.asList(lockKey, hashKey, field, channelName);
             List<String> args = Arrays.asList(
                     channelMessage
@@ -118,11 +144,7 @@ public class SeatsService {
                         "Unlock failed: " + lockKey);
             }
 
-            // todo: think about it:
-            // send to kafka
-//            BaseKafkaMessage<SeatReservationMessage> message = SeatKafkaMessageBuilder.buildUnlockMessage(eventId, venueId, rowNumber, seatNumber);
-//            kafkaProducer.send(kafkaTopic, message);
-
+            // TODO: Consider sending a message to Kafka
         } catch (DataAccessException exception) {
             throw new SeatOperationException(SeatErrorCodes.REDIS_DATA_ACCESS_ERROR,
                     "Unlock failed: " + exception.getMessage(), exception);
@@ -135,6 +157,13 @@ public class SeatsService {
         }
     }
 
+    /**
+     * Retrieves the list of seats for a specific event and venue.
+     *
+     * @param eventId ID of the event.
+     * @param venueId ID of the venue.
+     * @return List of seat responses.
+     */
     public List<SeatResponse> getSeats(Long eventId, Long venueId) {
         String lockedHashKey = RedisKeyFactory.reservationHashKey(eventId, venueId);
         String bookedHashKey = RedisKeyFactory.bookingHashKey(eventId, venueId);
@@ -164,6 +193,15 @@ public class SeatsService {
 
     }
 
+    /**
+     * Validates the locked hash in Redis and removes expired locks.
+     *
+     * @param lockedHashKey Redis key for locked seats.
+     * @param locked        Map of locked seats.
+     * @param eventId       ID of the event.
+     * @param venueId       ID of the venue.
+     * @return Map of valid locked seats.
+     */
     private Map<String, String> validateLockedHash(String lockedHashKey, Map<String, String> locked, Long eventId, Long venueId) {
         Map<String, String> result = new HashMap<>();
         for (Map.Entry<String, String> entry : locked.entrySet()) {
